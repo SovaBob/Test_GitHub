@@ -18,14 +18,14 @@ namespace TSS4Tests.Tests
         [Test]
         public void CreateServiceTest()
         {
-            UserService serv = new UserService(new UserRepository());
+            UserService serv = new UserService(new UserRepository(""));
             Assert.IsNotNull(serv.rep);
         }
 
         [Test]
         public void ProcessServiceTest()
         {
-            UserService serv = new UserService(new UserRepository());
+            UserService serv = new UserService(new UserRepository(""));
 
             serv.rep.User = new User()
             {
@@ -36,6 +36,17 @@ namespace TSS4Tests.Tests
 
             string result = serv.Process();
             string expected = "User: Bob has 4 public repositories. The work may be better!";
-            Assert.AreEqual(result, expected); 
+            Assert.AreEqual(result, expected);
+        }
+
+        [Test]
+        public void CheckUserWorkTestIsolation()
+        {
+            UserService serv = new UserService(new MockUserRepository(""));
+            
+            string result = serv.CheckUserWork("SovaBob");
+            string expected = "User: SovaBob has 4 public repositories. The work may be better!";
+            Assert.AreEqual(result, expected);
+        }
     }
 }
